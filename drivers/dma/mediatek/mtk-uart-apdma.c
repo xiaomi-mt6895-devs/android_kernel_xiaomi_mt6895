@@ -41,7 +41,7 @@
 #define VFF_STOP_CLR_B		0
 #define VFF_EN_CLR_B		0
 #define VFF_INT_EN_CLR_B	0
-#define VFF_4G_SUPPORT_CLR_B	0
+#define VFF_ADDR2_CLR_B		0
 #define VFF_ORI_ADDR_BITS_NUM    32
 /*
  * interrupt trigger level for tx
@@ -73,7 +73,7 @@
 /* TX: the buffer size SW can write. RX: the buffer size HW can write. */
 #define VFF_LEFT_SIZE		0x40
 #define VFF_DEBUG_STATUS	0x50
-#define VFF_4G_SUPPORT		0x54
+#define VFF_ADDR2		0x54
 
 struct mtk_uart_apdmacomp {
 	unsigned int addr_bits;
@@ -153,7 +153,7 @@ static void mtk_uart_apdma_start_tx(struct mtk_chan *c)
 		mtk_uart_apdma_write(c, VFF_INT_FLAG, VFF_TX_INT_CLR_B);
 
 		if (mtkd->support_bits > VFF_ORI_ADDR_BITS_NUM)
-			mtk_uart_apdma_write(c, VFF_4G_SUPPORT,
+			mtk_uart_apdma_write(c, VFF_ADDR2,
 					upper_32_bits(d->addr));
 	}
 
@@ -201,7 +201,7 @@ static void mtk_uart_apdma_start_rx(struct mtk_chan *c)
 		mtk_uart_apdma_write(c, VFF_INT_FLAG, VFF_RX_INT_CLR_B);
 
 		if (mtkd->support_bits > VFF_ORI_ADDR_BITS_NUM)
-			mtk_uart_apdma_write(c, VFF_4G_SUPPORT,
+			mtk_uart_apdma_write(c, VFF_ADDR2,
 					upper_32_bits(d->addr));
 	}
 
@@ -309,7 +309,7 @@ static int mtk_uart_apdma_alloc_chan_resources(struct dma_chan *chan)
 	}
 
 	if (mtkd->support_bits > VFF_ORI_ADDR_BITS_NUM)
-		mtk_uart_apdma_write(c, VFF_4G_SUPPORT, VFF_4G_SUPPORT_CLR_B);
+		mtk_uart_apdma_write(c, VFF_ADDR2, VFF_ADDR2_CLR_B);
 
 err_pm:
 	pm_runtime_put_noidle(mtkd->ddev.dev);
